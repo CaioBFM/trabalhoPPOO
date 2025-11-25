@@ -1,18 +1,13 @@
-## Getting Started
+# Projeto prático - Raposas e Coelhos
+Capítulo 10 do livro Programação Orientada a Objetos com Java – Uma Introdução Prática Usando o BlueJ, 4ºedição, dos autores Barnes e Kolling.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Diagrama de classes do código inicial do projeto
+<p align="center">
+    <img width="1032" height="582" alt="image" src="https://github.com/user-attachments/assets/a8461d31-3845-4f9c-a005-bf64e0950e40" />
+</p>
 
-## Folder Structure
+## Diagrama de classes para implementações futuras no projeto
+<p align="center">
+    <img width="871" height="805" alt="image" src="https://github.com/user-attachments/assets/d5f1797b-7fb6-4850-bd94-4edcfdf4866c" />
+</p>
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
