@@ -10,12 +10,8 @@ public abstract class Animal {
 
     // --- Contrato polimórfico ---
     public abstract void act(List<Animal> newAnimals);
-
     protected abstract int getBreedingAge();
-
     protected abstract int getMaxAge();
-
-    protected abstract int getFoodValue();
 
     // --- Construtor comum ---
     public Animal(boolean randomAge, Field field, Location location) {

@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Fox extends Consumidor {
+public class Fox extends Animal {
     private static final int BREEDING_AGE = 10;
     private static final int MAX_AGE = 150;
     private static final double BREEDING_PROBABILITY = 0.09;
@@ -26,19 +26,16 @@ public class Fox extends Consumidor {
     public void act(List<Animal> newAnimals) {
         incrementAge();
         incrementHunger();
-        if (!isAlive())
-            return;
+        if (!isAlive()) return;
 
-        // procriação
+        // nascimento
         giveBirth(newAnimals);
 
         // caça e movimento
         Location newLocation = findFood();
-        // se não encontrar comida, move-se para um local livre
         if (newLocation == null) {
             newLocation = getField().freeAdjacentLocation(getLocation());
         }
-        // come e move-se para a localização da presa
         if (newLocation != null) {
             setLocation(newLocation);
         } else {
@@ -48,8 +45,7 @@ public class Fox extends Consumidor {
 
     private void incrementHunger() {
         foodLevel--;
-        if (foodLevel <= 0)
-            setDead();
+        if (foodLevel <= 0) setDead();
     }
 
     private Location findFood() {
@@ -61,8 +57,8 @@ public class Fox extends Consumidor {
             if (obj instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) obj;
                 if (rabbit.isAlive()) {
-                    rabbit.setDead(); // come o coelho
-                    foodLevel = RABBIT_FOOD_VALUE; // recarrega “energia”
+                    rabbit.setDead();               // come o coelho
+                    foodLevel = RABBIT_FOOD_VALUE;  // recarrega “energia”
                     return where;
                 }
             }
@@ -88,17 +84,8 @@ public class Fox extends Consumidor {
     }
 
     @Override
-    protected int getBreedingAge() {
-        return BREEDING_AGE;
-    }
+    protected int getBreedingAge() { return BREEDING_AGE; }
 
     @Override
-    protected int getMaxAge() {
-        return MAX_AGE;
-    }
-
-    @Override
-    protected int getFoodValue() {
-        return RABBIT_FOOD_VALUE;
-    }
+    protected int getMaxAge() { return MAX_AGE; }
 }
