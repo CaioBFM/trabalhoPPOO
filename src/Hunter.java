@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Hunter extends Consumidor {
+public class Hunter extends Consumer {
     private static final int BREEDING_AGE = 12;
     private static final int MAX_AGE = 40;
     private static final double BREEDING_PROBABILITY = 0.09;

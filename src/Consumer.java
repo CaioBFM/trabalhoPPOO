@@ -14,4 +14,11 @@ public abstract class Consumer extends Animal {
         }
     }
 
+    public int getFoodLevel() {
+        return foodLevel;
+    }
+
+    protected int setFoodLevel(int foodLevel) {
+        return this.foodLevel = foodLevel;
+    }
 }

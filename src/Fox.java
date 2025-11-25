@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Fox extends Consumidor {
+public class Fox extends Consumer {
     private static final int BREEDING_AGE = 10;
     private static final int MAX_AGE = 150;
     private static final double BREEDING_PROBABILITY = 0.09;
@@ -10,16 +10,8 @@ public class Fox extends Consumidor {
     private static final int RABBIT_FOOD_VALUE = 7;
     private static final Random rand = new Random();
 
-    private int foodLevel;
-
     public Fox(boolean randomAge, Field field, Location location) {
         super(randomAge, field, location);
-        // raposa recém-nascida começa alimentada
-        foodLevel = RABBIT_FOOD_VALUE;
-        if (randomAge) {
-            // fome aleatória também, semelhante ao livro
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE) + 1;
-        }
     }
 
     @Override
@@ -47,8 +39,8 @@ public class Fox extends Consumidor {
     }
 
     private void incrementHunger() {
-        foodLevel--;
-        if (foodLevel <= 0)
+        setFoodLevel(getFoodLevel() - 1);
+        if (getFoodLevel() <= 0)
             setDead();
     }
 
