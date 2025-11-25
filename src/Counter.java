@@ -1,51 +1,60 @@
+import java.awt.Color;
+
 /**
- * Fornece uma contagem para um tipo particular de objeto.
- * Os objetos de Counter são usados para armazenar o número de
- * instâncias de uma classe específica encontradas no campo.
+ * Provide a counter for a participant in the simulation.
+ * This includes an identifying string and a count of how
+ * many participants of this type currently exist within 
+ * the simulation.
  * 
- * Baseado em: "Programação Orientada a Objetos com Java – Uma Introdução Prática Usando o BlueJ"
- * (Barnes & Kolling, 4ª edição)
+ * @author David J. Barnes and Michael Kolling
+ * @version 2002-04-23
  */
-public class Counter {
-    // Nome do tipo de objeto que está sendo contado
+public class Counter
+{
+    // A name for this type of simulation participant
     private String name;
-    // Valor atual da contagem
+    // How many of this type exist in the simulation.
     private int count;
 
     /**
-     * Cria um contador com o nome fornecido.
-     * @param name O nome do tipo de objeto a ser contado.
+     * Provide a name for one of the simulation types.
+     * @param name  A name, e.g. "Fox".
      */
-    public Counter(String name) {
+    public Counter(String name)
+    {
         this.name = name;
-        this.count = 0;
+        count = 0;
     }
-
+    
     /**
-     * @return O nome deste contador (ex: "Fox", "Rabbit")
+     * @return The short description of this type.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     /**
-     * @return O valor atual da contagem.
+     * @return The current count for this type.
      */
-    public int getCount() {
+    public int getCount()
+    {
         return count;
     }
 
     /**
-     * Incrementa a contagem em 1.
+     * Increment the current count by one.
      */
-    public void increment() {
+    public void increment()
+    {
         count++;
     }
-
+    
     /**
-     * Reseta a contagem para zero.
+     * Reset the current count to zero.
      */
-    public void reset() {
+    public void reset()
+    {
         count = 0;
     }
 }

@@ -1,83 +1,191 @@
+import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
+import java.util.Collections;
 import java.awt.Color;
 
-public class Simulator {
-    // Tamanho padrão do campo
-    private static final int DEFAULT_DEPTH = 50;
+/**
+ * A simple predator-prey simulator, based on a field containing
+ * rabbits and foxes.
+ * * @author David J. Barnes and Michael Kolling
+ * @version 2002-04-09
+ */
+public class Simulator
+{
+    // The private static final variables represent 
+    // configuration information for the simulation.
     private static final int DEFAULT_WIDTH = 50;
-
-    // Probabilidades de criação
+    private static final int DEFAULT_DEPTH = 50;
     private static final double FOX_CREATION_PROBABILITY = 0.02;
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    private static final double RABBIT_CREATION_PROBABILITY = 0.08;    
+    private static final double HUNTER_CREATION_PROBABILITY = 0.01; // Baixa densidade
+    private static final double TREE_CREATION_PROBABILITY = 0.05;
 
-    private final ArrayList<Animal> animals;
-    private final Field field;
+    // The list of actors in the field (renamed from animals)
+    private List actors;
+    // The list of actors just born
+    private List newActors;
+    // The current state of the field.
+    private Field field;
+    // A second field, used to build the next stage of the simulation.
+    private Field updatedField;
+    // The current step of the simulation.
     private int step;
-    private final SimulatorView view;
-    private final Random rand = new Random();
-
-    public Simulator() { this(DEFAULT_DEPTH, DEFAULT_WIDTH); }
-
-    public Simulator(int depth, int width) {
-        if (width <= 0 || depth <= 0) {
+    // A graphical view of the simulation.
+    private SimulatorView view;
+    
+    /**
+     * Construct a simulation field with default size.
+     */
+    public Simulator()
+    {
+        this(DEFAULT_DEPTH, DEFAULT_WIDTH);
+    }
+    
+    /**
+     * Create a simulation field with the given size.
+     */
+    public Simulator(int depth, int width)
+    {
+        if(width <= 0 || depth <= 0) {
+            System.out.println("The dimensions must be greater than zero.");
+            System.out.println("Using default values.");
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList<>();
+        
+        // Use a generic list for any Actor
+        actors = new ArrayList();
+        newActors = new ArrayList();
         field = new Field(depth, width);
+        updatedField = new Field(depth, width);
+
+        // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width);
-        view.setColor(Rabbit.class, Color.ORANGE);
-        view.setColor(Fox.class, Color.BLUE);
+        view.setColor(Fox.class, Color.blue);
+        view.setColor(Rabbit.class, Color.orange);
+        view.setColor(Hunter.class, Color.magenta);
+        view.setColor(Tree.class, Color.green);
+        
+        // Setup a valid starting point.
         reset();
     }
-
-    public void runLongSimulation() { simulate(500); }
-
-    public void simulate(int numSteps) {
-        for (int i = 1; i <= numSteps && view.isViable(field); i++) {
+    
+    /**
+     * Run the simulation from its current state for a reasonably long period.
+     */
+    public void runLongSimulation()
+    {
+        simulate(500);
+    }
+    
+    /**
+     * Run the simulation from its current state for the given number of steps.
+     */
+    public void simulate(int numSteps)
+    {
+        for(int step = 1; step <= numSteps && view.isViable(field); step++) {
+            try {
+                // Pausa por 100 milissegundos (0.1 segundo) entre cada passo.
+                // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
+                Thread.sleep(100); 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             simulateOneStep();
         }
     }
-
-    public void simulateOneStep() {
+    
+    /**
+     * Run the simulation from its current state for a single step.
+     * Iterate over the whole field updating the state of each actor.
+     */
+    public void simulateOneStep()
+    {
         step++;
-        List<Animal> newAnimals = new ArrayList<>();
-
-        // POLIMORFISMO: cada espécie executa seu próprio act()
-        for (Iterator<Animal> it = animals.iterator(); it.hasNext();) {
-            Animal animal = it.next();
-            animal.act(newAnimals);
-            if (!animal.isAlive()) it.remove();
-        }
-
-        animals.addAll(newAnimals);
-        view.showStatus(step, field);
-    }
-
-    public void reset() {
-        step = 0;
-        animals.clear();
-        field.clear();
-        populate();
-        view.showStatus(step, field);
-    }
-
-    private void populate() {
-        field.clear();
-        for (int row = 0; row < field.getDepth(); row++) {
-            for (int col = 0; col < field.getWidth(); col++) {
-                double r = rand.nextDouble();
-                Location location = new Location(row, col);
-                if (r <= FOX_CREATION_PROBABILITY) {
-                    animals.add(new Fox(true, field, location));
-                } else if (r <= FOX_CREATION_PROBABILITY + RABBIT_CREATION_PROBABILITY) {
-                    animals.add(new Rabbit(true, field, location));
+        newActors.clear();
+        
+        // let all actors act
+        for(Iterator iter = actors.iterator(); iter.hasNext(); ) {
+            Object obj = iter.next();
+            // Using Actor instead of Animal allows for polymorphism
+            if (obj instanceof Actor) {
+                Actor actor = (Actor)obj;
+                if(actor.isAlive()) {
+                    actor.act(field, updatedField, newActors);
                 }
-                // senão, deixa vazio
+                else {
+                    iter.remove(); // remove dead actors from collection
+                }
+            } else {
+                 System.out.println("found unknown actor");
             }
         }
+        // add new born actors to the list of actors
+        actors.addAll(newActors);
+        
+        // Swap the field and updatedField at the end of the step.
+        Field temp = field;
+        field = updatedField;
+        updatedField = temp;
+        updatedField.clear();
+
+        // display the new field on screen
+        view.showStatus(step, field);
+    }
+        
+    /**
+     * Reset the simulation to a starting position.
+     */
+    public void reset()
+    {
+        step = 0;
+        actors.clear();
+        field.clear();
+        updatedField.clear();
+        populate(field);
+        
+        // Show the starting state in the view.
+        view.showStatus(step, field);
+    }
+    
+    /**
+     * Populate the field with foxes and rabbits.
+     */
+    private void populate(Field field)
+    {
+        Random rand = new Random();
+        field.clear();
+        for(int row = 0; row < field.getDepth(); row++) {
+            for(int col = 0; col < field.getWidth(); col++) {
+                if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
+                    Fox fox = new Fox(true);
+                    actors.add(fox);
+                    fox.setLocation(row, col);
+                    field.place(fox, row, col);
+                }
+                else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
+                    Rabbit rabbit = new Rabbit(true);
+                    actors.add(rabbit);
+                    rabbit.setLocation(row, col);
+                    field.place(rabbit, row, col);
+                }
+                else if(rand.nextDouble() <= HUNTER_CREATION_PROBABILITY) {
+                    Hunter hunter = new Hunter(true);
+                    actors.add(hunter);
+                    hunter.setLocation(row, col);
+                    field.place(hunter, row, col);
+                }
+                else if(rand.nextDouble() <= TREE_CREATION_PROBABILITY) {
+                    Tree tree = new Tree();
+                    actors.add(tree);
+                    tree.setLocation(new Location(row, col)); // Tree precisa de Location manual
+                    field.place(tree, row, col);
+                }
+                // senão, deixa o local vazio
+            }
+        }
+        Collections.shuffle(actors);
     }
 }

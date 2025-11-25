@@ -58,17 +58,17 @@ public class SimulatorView extends JFrame
     /**
      * Define a color to be used for a given class of animal.
      */
-    public void setColor(Class animalClass, Color color)
+    public void setColor(Class actorClass, Color color)
     {
-        colors.put(animalClass, color);
+        colors.put(actorClass, color);
     }
 
     /**
      * Define a color to be used for a given class of animal.
      */
-    private Color getColor(Class animalClass)
+    private Color getColor(Class actorClass)
     {
-        Color col = (Color)colors.get(animalClass);
+        Color col = (Color)colors.get(actorClass);
         if(col == null) {
             // no color defined for this class
             return UNKNOWN_COLOR;
