@@ -50,8 +50,8 @@ public class Field {
      * @param row    Row coordinate of the location.
      * @param col    Column coordinate of the location.
      */
-    public void place(Object animal, int row, int col) {
-        place(animal, new Location(row, col));
+    public void place(Object object, int row, int col) {
+        place(object, new Location(row, col));
     }
 
     /**
