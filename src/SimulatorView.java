@@ -79,7 +79,7 @@ public class SimulatorView extends JFrame {
      * @param step  Which iteration step it is.
      * @param stats Status of the field to be represented.
      */
-    public void showStatus(int step, Field field) {
+    public void showStatus(int step, Field field, String currentSeason) {
         if (!isVisible())
             setVisible(true);
 
@@ -93,7 +93,15 @@ public class SimulatorView extends JFrame {
                 Object object = field.getObjectAt(row, col);
                 if (object != null) {
                     stats.incrementCount(object.getClass());
-                    fieldView.drawMark(col, row, getColor(object.getClass()));
+
+                    Color color;
+                    if (object instanceof Tree && currentSeason != null) {
+                        color = getTreeColorForSeason(currentSeason);
+                    } else {
+                        color = getColor(object.getClass());
+                    }
+
+                    fieldView.drawMark(col, row, color);
                 } else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
                 }
@@ -101,8 +109,25 @@ public class SimulatorView extends JFrame {
         }
         stats.countFinished();
 
-        population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
+        population.setText(
+                POPULATION_PREFIX + stats.getPopulationDetails(field)
+                        + "  Season: " + (currentSeason != null ? currentSeason : ""));
         fieldView.repaint();
+    }
+
+    private Color getTreeColorForSeason(String season) {
+        switch (season) {
+            case "spring":
+                return Color.green; // Verde claro
+            case "summer":
+                return new Color(0, 200, 55); // Verde escuro
+            case "autumn":
+                return Color.red; // vermelho
+            case "winter":
+                return new Color(136, 70, 20); // Marrom
+            default:
+                return getColor(Tree.class); // Cor padrão
+        }
     }
 
     /**

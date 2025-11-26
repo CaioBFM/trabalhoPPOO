@@ -37,6 +37,10 @@ public class Simulator {
     // A graphical view of the simulation.
     private SimulatorView view;
 
+    private String currentSeason;
+
+    private static final int SEASON_LENGTH = 50;
+
     private Random rand = new Random();
 
     /**
@@ -71,6 +75,8 @@ public class Simulator {
         view.setColor(Hunter.class, Color.magenta);
         view.setColor(Tree.class, Color.green);
         view.setColor(Stone.class, Color.gray);
+
+        currentSeason = "spring";
 
         // Setup a valid starting point.
         reset();
@@ -140,8 +146,10 @@ public class Simulator {
         updatedField = temp;
         updatedField.clear();
 
+        updateSeason();
+
         // display the new field on screen
-        view.showStatus(step, field);
+        view.showStatus(step, field, currentSeason);
     }
 
     /**
@@ -155,8 +163,11 @@ public class Simulator {
         putStonesInField(field);
         populate(field);
 
+        currentSeason = "spring";
+        updateSeason();
+
         // Show the starting state in the view.
-        view.showStatus(step, field);
+        view.showStatus(step, field, currentSeason);
     }
 
     /**
@@ -237,5 +248,24 @@ public class Simulator {
             }
         }
         Collections.shuffle(actors);
+    }
+
+    private void updateSeason() {
+        int seasonIndex = (step / SEASON_LENGTH) % 4;
+        switch (seasonIndex) {
+            case 0:
+                currentSeason = "spring";
+                break;
+            case 1:
+                currentSeason = "summer";
+                break;
+            case 2:
+                currentSeason = "autumn";
+                break;
+            case 3:
+            default:
+                currentSeason = "winter";
+                break;
+        }
     }
 }
