@@ -31,7 +31,7 @@ public abstract class Animal implements Actor {
      * whatever it wants/needs to do.
      * (Defined in Actor, implemented in concrete subclasses like Fox/Rabbit)
      */
-    abstract public void act(Field currentField, Field updatedField, List newAnimals);
+    abstract public void act(Field currentField, Field updatedField, List<Actor> newAnimals);
 
     abstract public int getMaxAge();
 

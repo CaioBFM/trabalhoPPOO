@@ -8,7 +8,7 @@ import java.util.Random;
  * 
  * @version 2002-04-11
  */
-public class Rabbit extends Animal {
+public class Rabbit extends Animal implements HuntersPreys {
     // Characteristics shared by all rabbits (static fields).
 
     // The age at which a rabbit can start to breed.
@@ -42,7 +42,7 @@ public class Rabbit extends Animal {
      * around. Sometimes it will breed or die of old age.
      * (Renamed from 'run' to 'act' to match superclass)
      */
-    public void act(Field currentField, Field updatedField, List newRabbits) {
+    public void act(Field currentField, Field updatedField, List<Actor> newRabbits) {
         incrementAge();
         if (isAlive()) {
             int births = breed();

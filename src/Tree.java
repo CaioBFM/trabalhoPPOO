@@ -26,14 +26,14 @@ public class Tree implements Actor {
     private Location location;
     // Árvores estão sempre vivas na simulação atual (a menos que sejam destruídas,
     // o que não foi especificado).
-    private boolean active;
+    private boolean alive;
 
     /**
      * Cria uma nova árvore.
      * Árvores iniciam com uma quantidade aleatória de frutos.
      */
     public Tree() {
-        this.active = true;
+        this.alive = true;
         this.fruitCount = rand.nextInt(MAX_FRUITS + 1);
     }
 
@@ -43,14 +43,14 @@ public class Tree implements Actor {
      * atualizado.
      */
     public void act(Field currentField, Field updatedField, List newActors) {
-        if (isActive()) {
+        if (isAlive()) {
             growFruit();
             // Árvores não se movem, então ocupam o mesmo lugar no novo campo.
             if (updatedField.getObjectAt(location) == null) {
                 updatedField.place(this, location);
             } else {
                 // Se algo tomou o lugar (erro de lógica ou colisão), a árvore deixa de existir.
-                active = false;
+                alive = false;
             }
         }
     }
@@ -73,7 +73,7 @@ public class Tree implements Actor {
         if (fruitCount > 0) {
             fruitCount--;
             // Valor de energia arbitrário para um fruto
-            return 10;
+            return 40;
         } else {
             return 0;
         }
@@ -93,8 +93,9 @@ public class Tree implements Actor {
      * 
      * @return True se a árvore ainda existe.
      */
+    @Override
     public boolean isAlive() {
-        return active;
+        return alive;
     }
 
     /**
@@ -113,10 +114,5 @@ public class Tree implements Actor {
      */
     public Location getLocation() {
         return location;
-    }
-
-    // Método auxiliar para compatibilidade com a interface Actor/Simulator
-    private boolean isActive() {
-        return active;
     }
 }

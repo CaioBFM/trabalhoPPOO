@@ -16,7 +16,7 @@ public interface Actor {
      * @param updatedField The field to transfer to.
      * @param newActors    A list to receive newly created actors.
      */
-    void act(Field currentField, Field updatedField, List newActors);
+    void act(Field currentField, Field updatedField, List<Actor> newActors);
 
     /**
      * Check whether the actor is alive or active.

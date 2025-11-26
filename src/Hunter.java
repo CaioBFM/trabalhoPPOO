@@ -17,15 +17,15 @@ public class Hunter extends Animal {
     // Depois de matar certa quantidade de animais, o caçador morre
     private static final int MAX_KILLS = 100;
     // Quantidade de abates necessários para se reproduzir.
-    private static final int KILLS_TO_BREED = 3;
+    private static final int KILLS_TO_BREED = 2;
     // Energia máxima.
-    private static final int MAX_ENERGY = 100;
+    private static final int MAX_ENERGY = 200;
     // Energia perdida por passo.
-    private static final int ENERGY_LOSS = 2;
+    private static final int ENERGY_LOSS = 1;
     // Tamanho máximo da ninhada.
-    private static final int MAX_LITTER_SIZE = 2;
+    private static final int MAX_LITTER_SIZE = 3;
     // Probabilidade de reprodução.
-    private static final double BREEDING_PROBABILITY = 0.2;
+    private static final double BREEDING_PROBABILITY = 1;
     // Idade máxima.
     private static final int MAX_AGE = 70;
     // Gerador de números aleatórios.
@@ -57,7 +57,7 @@ public class Hunter extends Animal {
      * O comportamento do caçador a cada passo.
      * Ele perde energia, caça ou coleta frutos, e tenta se reproduzir.
      */
-    public void act(Field currentField, Field updatedField, List newHunters) {
+    public void act(Field currentField, Field updatedField, List<Actor> newHunters) {
         incrementAge();
         decresceEnergy();
 
@@ -112,7 +112,7 @@ public class Hunter extends Animal {
             Object object = field.getObjectAt(where);
 
             // Estratégia: Se energia baixa, procura Árvore com fruto.
-            if (energy < (MAX_ENERGY * 0.3)) {
+            if (energy < (MAX_ENERGY * 0.4)) {
                 if (object instanceof Tree) {
                     Tree tree = (Tree) object;
                     if (tree.hasFruit()) {
@@ -127,7 +127,7 @@ public class Hunter extends Animal {
             }
 
             // Se energia ok, ou não achou fruta, caça coelhos ou raposas.
-            if (object instanceof Rabbit || object instanceof Fox) {
+            if (object instanceof HuntersPreys) {
                 Animal prey = (Animal) object;
                 if (prey.isAlive()) {
                     prey.setDead(); // Mata a presa

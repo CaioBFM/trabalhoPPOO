@@ -9,7 +9,7 @@ import java.util.Random;
  * 
  * @version 2002-04-11
  */
-public class Fox extends Animal {
+public class Fox extends Animal implements HuntersPreys {
     // Characteristics shared by all foxes (static fields).
 
     // The age at which a fox can start to breed.
@@ -54,7 +54,7 @@ public class Fox extends Animal {
      * or die of old age.
      * (Renamed from 'hunt' to 'act' to match superclass)
      */
-    public void act(Field currentField, Field updatedField, List newFoxes) {
+    public void act(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
         if (isAlive()) {
