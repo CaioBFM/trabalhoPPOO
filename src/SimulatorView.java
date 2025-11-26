@@ -54,14 +54,14 @@ public class SimulatorView extends JFrame {
     }
 
     /**
-     * Define a color to be used for a given class of animal.
+     * Define a color to be used for a given class of object.
      */
     public void setColor(Class actorClass, Color color) {
         colors.put(actorClass, color);
     }
 
     /**
-     * Define a color to be used for a given class of animal.
+     * Define a color to be used for a given class of object.
      */
     private Color getColor(Class actorClass) {
         Color col = (Color) colors.get(actorClass);
@@ -90,10 +90,10 @@ public class SimulatorView extends JFrame {
 
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                Object animal = field.getObjectAt(row, col);
-                if (animal != null) {
-                    stats.incrementCount(animal.getClass());
-                    fieldView.drawMark(col, row, getColor(animal.getClass()));
+                Object object = field.getObjectAt(row, col);
+                if (object != null) {
+                    stats.incrementCount(object.getClass());
+                    fieldView.drawMark(col, row, getColor(object.getClass()));
                 } else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
                 }

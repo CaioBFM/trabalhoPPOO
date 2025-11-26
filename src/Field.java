@@ -46,7 +46,7 @@ public class Field {
      * If there is already an animal at the location it will
      * be lost.
      * 
-     * @param animal The animal to be placed.
+     * @param object The object to be placed.
      * @param row    Row coordinate of the location.
      * @param col    Column coordinate of the location.
      */
@@ -55,15 +55,15 @@ public class Field {
     }
 
     /**
-     * Place an animal at the given location.
-     * If there is already an animal at the location it will
+     * Place an object at the given location.
+     * If there is already an object at the location it will
      * be lost.
      * 
-     * @param animal   The animal to be placed.
-     * @param location Where to place the animal.
+     * @param object   The object to be placed.
+     * @param location Where to place the object.
      */
-    public void place(Object animal, Location location) {
-        field[location.getRow()][location.getCol()] = animal;
+    public void place(Object object, Location location) {
+        field[location.getRow()][location.getCol()] = object;
     }
 
     /**

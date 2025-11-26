@@ -26,6 +26,8 @@ public class Simulator {
     private List<Actor> actors;
     // The list of actors just born
     private List<Actor> newActors;
+
+    private List<Obstacles> obstacles;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -34,6 +36,8 @@ public class Simulator {
     private int step;
     // A graphical view of the simulation.
     private SimulatorView view;
+
+    private Random rand = new Random();
 
     /**
      * Construct a simulation field with default size.
@@ -56,6 +60,7 @@ public class Simulator {
         // Use a generic list for any Actor
         actors = new ArrayList<>();
         newActors = new ArrayList<>();
+        obstacles = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -65,6 +70,7 @@ public class Simulator {
         view.setColor(Rabbit.class, Color.orange);
         view.setColor(Hunter.class, Color.magenta);
         view.setColor(Tree.class, Color.green);
+        view.setColor(Stone.class, Color.gray);
 
         // Setup a valid starting point.
         reset();
@@ -83,7 +89,7 @@ public class Simulator {
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
             try {
-                // Pausa por 100 milissegundos (0.1 segundo) entre cada passo.
+                // Pausa por 1000 milissegundos (1 segundo) entre cada passo.
                 // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -119,6 +125,15 @@ public class Simulator {
         // add new born actors to the list of actors
         actors.addAll(newActors);
 
+        for (Obstacles obstacle : obstacles) {
+            if (obstacle instanceof Stone) {
+                Stone stone = (Stone) obstacle;
+                Location loc = stone.getLocation();
+                // Garante que a pedra esteja presente no campo “novo”
+                updatedField.place(stone, loc);
+            }
+        }
+
         // Swap the field and updatedField at the end of the step.
         Field temp = field;
         field = updatedField;
@@ -137,6 +152,7 @@ public class Simulator {
         actors.clear();
         field.clear();
         updatedField.clear();
+        putStonesInField(field);
         populate(field);
 
         // Show the starting state in the view.
@@ -144,13 +160,58 @@ public class Simulator {
     }
 
     /**
+     * Place stones randomly in the field.
+     */
+    private void putStonesInField(Field field) {
+        obstacles.clear();
+        for (int i = 0; i < Stone.NUM_STONES; i++) {
+            int row = rand.nextInt(field.getDepth());
+            int col = rand.nextInt(field.getWidth());
+            // Verifica se já existe um objeto na posição
+            if (field.getObjectAt(row, col) == null) {
+                Location loc = new Location(row, col);
+                Stone stone = new Stone(loc);
+                field.place(stone, loc);
+                obstacles.add(stone);
+                placeAndPropagateStone(row, col, field);
+            } else {
+                i--; // Tenta novamente se a posição já estiver ocupada
+            }
+        }
+    }
+
+    /**
+     * Place a stone and propagate its effect to surrounding locations.
+     */
+    private void placeAndPropagateStone(int row, int col, Field field) {
+        for (int i = 0; i < 6; i++) {
+            Location base = new Location(row, col);
+            Location loc = field.freeAdjacentLocation(base);
+
+            // Se não há mais lugar livre em volta, para o laço
+            if (loc != null) {
+                Stone stone = new Stone(loc);
+                field.place(stone, loc);
+                obstacles.add(stone);
+            }
+        }
+    }
+
+    /**
      * Populate the field with foxes and rabbits.
      */
     private void populate(Field field) {
-        Random rand = new Random();
-        field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
+                // Se já tem uma pedra, não coloca nada
+                if (field.getObjectAt(row, col) instanceof Stone) {
+                    continue;
+                }
+                // Se já tem algo (outro ator), não faz nada
+                if (field.getObjectAt(row, col) != null) {
+                    continue;
+                }
+
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true);
                     actors.add(fox);
@@ -169,7 +230,7 @@ public class Simulator {
                 } else if (rand.nextDouble() <= TREE_CREATION_PROBABILITY) {
                     Tree tree = new Tree();
                     actors.add(tree);
-                    tree.setLocation(new Location(row, col)); // Tree precisa de Location manual
+                    tree.setLocation(new Location(row, col));
                     field.place(tree, row, col);
                 }
                 // senão, deixa o local vazio
