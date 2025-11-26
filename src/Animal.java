@@ -33,13 +33,13 @@ public abstract class Animal implements Actor {
      */
     abstract public void act(Field currentField, Field updatedField, List newAnimals);
 
-    abstract public int getBreedingAge();
-
     abstract public int getMaxAge();
 
     abstract public double getBreedingProbability();
 
     abstract public int getMaxLitterSize();
+
+    abstract public boolean canBreed();
 
     /**
      * Check whether the animal is alive or not.
@@ -110,10 +110,6 @@ public abstract class Animal implements Actor {
         if (age > getMaxAge()) {
             setDead();
         }
-    }
-
-    private boolean canBreed() {
-        return age >= getBreedingAge();
     }
 
     protected int breed() {

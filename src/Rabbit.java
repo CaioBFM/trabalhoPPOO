@@ -66,8 +66,8 @@ public class Rabbit extends Animal {
     }
 
     @Override
-    public int getBreedingAge() {
-        return BREEDING_AGE;
+    public boolean canBreed() {
+        return getAge() >= BREEDING_AGE;
     }
 
     @Override

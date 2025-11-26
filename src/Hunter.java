@@ -14,16 +14,20 @@ import java.util.Random;
 public class Hunter extends Animal {
     // Características estáticas.
 
-    // Idade máxima de um caçador.
-    private static final int MAX_AGE = 100;
+    // Depois de matar certa quantidade de animais, o caçador morre
+    private static final int MAX_KILLS = 100;
     // Quantidade de abates necessários para se reproduzir.
     private static final int KILLS_TO_BREED = 3;
     // Energia máxima.
     private static final int MAX_ENERGY = 100;
     // Energia perdida por passo.
     private static final int ENERGY_LOSS = 2;
-
-    private static final int BREEDING_AGE = 15;
+    // Tamanho máximo da ninhada.
+    private static final int MAX_LITTER_SIZE = 2;
+    // Probabilidade de reprodução.
+    private static final double BREEDING_PROBABILITY = 0.2;
+    // Idade máxima.
+    private static final int MAX_AGE = 70;
     // Gerador de números aleatórios.
     private static final Random rand = new Random();
 
@@ -43,7 +47,6 @@ public class Hunter extends Animal {
         super();
         killCount = 0;
         if (randomAge) {
-            setAge(rand.nextInt(MAX_AGE));
             energy = rand.nextInt(MAX_ENERGY);
         } else {
             energy = MAX_ENERGY;
@@ -56,16 +59,22 @@ public class Hunter extends Animal {
      */
     public void act(Field currentField, Field updatedField, List newHunters) {
         incrementAge();
-        energy -= ENERGY_LOSS;
+        decresceEnergy();
 
-        if (energy <= 0) {
+        if (energy <= 0 || killCount >= MAX_KILLS) {
             setDead(); // Morre de fome/exaustão
         }
 
         if (isAlive()) {
-            // Tenta se reproduzir se tiver caçado o suficiente
-            // Passamos updatedField para definir a posição do filho
-            reproduce(updatedField, newHunters);
+            int births = breed();
+            for (int b = 0; b < births; b++) {
+                Hunter newHunter = new Hunter(false);
+                newHunters.add(newHunter);
+                Location loc = updatedField.randomAdjacentLocation(getLocation());
+                newHunter.setLocation(loc);
+                updatedField.place(newHunter, loc);
+            }
+            killCount = 0;
 
             // Move-se procurando comida (Frutos ou Presas)
             Location newLocation = findResources(currentField, getLocation());
@@ -82,36 +91,6 @@ public class Hunter extends Animal {
                 // Superpopulação - sem lugar para ir
                 setDead();
             }
-        }
-    }
-
-    /**
-     * Sobrescreve o incremento de idade para usar a idade máxima do humano.
-     */
-    protected void incrementAge() {
-        super.incrementAge();
-        if (getAge() > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Reprodução baseada em mérito (quantidade de caça).
-     */
-    private void reproduce(Field updatedField, List newHunters) {
-        // Se atingiu a meta de caça, nasce um novo caçador
-        if (killCount >= KILLS_TO_BREED) {
-            Hunter offspring = new Hunter(false);
-
-            // Define a localização do filho (adjacente ao pai)
-            Location loc = updatedField.randomAdjacentLocation(getLocation());
-            offspring.setLocation(loc);
-
-            // Adiciona ao campo e à lista
-            updatedField.place(offspring, loc);
-            newHunters.add(offspring);
-
-            killCount = 0; // Reinicia a contagem após procriar
         }
     }
 
@@ -161,32 +140,32 @@ public class Hunter extends Animal {
         return null;
     }
 
+    private void decresceEnergy() {
+        energy -= ENERGY_LOSS;
+    }
+
     @Override
     public boolean isAlive() {
         return energy > 0;
     }
 
     @Override
-    public int getBreedingAge() {
-        return 
-    }
-
-    @Override
-    public int getMaxAge() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaxAge'");
-    }
-
-    @Override
-    public double getBreedingProbability() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBreedingProbability'");
+    public boolean canBreed() {
+        return killCount >= KILLS_TO_BREED;
     }
 
     @Override
     public int getMaxLitterSize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaxLitterSize'");
+        return MAX_LITTER_SIZE;
     }
 
+    @Override
+    public int getMaxAge() {
+        return MAX_AGE;
+    }
+
+    @Override
+    public double getBreedingProbability() {
+        return BREEDING_PROBABILITY;
+    }
 }
