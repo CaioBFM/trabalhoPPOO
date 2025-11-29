@@ -155,7 +155,7 @@ public class Simulator {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
             notSimulating = false;
             try {
-                // Pausa por 1000 milissegundos (1 segundo) entre cada passo.
+                // Pausa por _ milissegundos entre cada passo.
                 // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -222,8 +222,8 @@ public class Simulator {
         field.clear();
         updatedField.clear();
 
-        // Adicionando as pedras com base no arquivo "map.txt"
-        loadStonesFromFile("map.txt", field);
+        // Adicionando as pedras com base nos arquivos de mapa dentro da pasta mapas
+        loadStonesFromFile("mapas/map3.txt", field);
 
         populate(field);
 
