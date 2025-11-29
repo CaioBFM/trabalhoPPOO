@@ -1,4 +1,5 @@
 import java.util.Random;
+import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,6 +49,8 @@ public class Simulator {
 
     private Random rand = new Random();
 
+    private boolean notSimulating;
+
     /**
      * Construct a simulation field with default size.
      */
@@ -80,14 +83,21 @@ public class Simulator {
         view.setColor(Hunter.class, Color.magenta);
         view.setColor(Tree.class, Color.green);
         view.setColor(Stone.class, Color.gray);
-        
+
         // Conectar o botão da View à lógica do Simulator
         view.setStepListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                simulateOneStep();
+                if (notSimulating) {
+                    simulateOneStep();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "A simulação está em andamento. Aguarde a conclusão antes de usar o modo passo a passo.");
+                }
             }
         });
 
+        notSimulating = true;
         currentSeason = "spring";
 
         // Setup a valid starting point.
@@ -99,18 +109,18 @@ public class Simulator {
      */
     private void loadStonesFromFile(String filename, Field field) {
         obstacles.clear(); // Limpa pedras antigas
-        
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
             int row = 0;
-            
+
             // Lê linha por linha
             while ((line = reader.readLine()) != null && row < field.getDepth()) {
                 // Lê caractere por caractere da linha
                 for (int col = 0; col < line.length() && col < field.getWidth(); col++) {
                     char symbol = line.charAt(col);
-                    
+
                     if (symbol == 'X' || symbol == 'x') {
                         // Verifica se a posição é válida e está vazia
                         if (field.getObjectAt(row, col) == null) {
@@ -127,7 +137,7 @@ public class Simulator {
         } catch (IOException e) {
             System.out.println("Erro ao carregar mapa: " + e.getMessage());
             // Opcional: Se der erro ao ler o arquivo, gera pedras aleatórias como fallback
-            putStonesInField(field); 
+            putStonesInField(field);
         }
     }
 
@@ -143,6 +153,7 @@ public class Simulator {
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
+            notSimulating = false;
             try {
                 // Pausa por 1000 milissegundos (1 segundo) entre cada passo.
                 // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
@@ -152,6 +163,7 @@ public class Simulator {
             }
             simulateOneStep();
         }
+        notSimulating = true;
     }
 
     /**

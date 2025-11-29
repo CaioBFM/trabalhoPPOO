@@ -41,6 +41,10 @@ public class SimulatorView extends JFrame {
         colors = new HashMap();
 
         setTitle("Fox and Rabbit Simulation - GRUPO 5");
+
+        // Configuração para fechar a janela
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
 
