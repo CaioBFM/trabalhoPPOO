@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * A simple predator-prey simulator, based on a field containing
@@ -75,6 +77,13 @@ public class Simulator {
         view.setColor(Hunter.class, Color.magenta);
         view.setColor(Tree.class, Color.green);
         view.setColor(Stone.class, Color.gray);
+        
+        // Conectar o botão da View à lógica do Simulator
+        view.setStepListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                simulateOneStep();
+            }
+        });
 
         currentSeason = "spring";
 

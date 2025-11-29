@@ -25,6 +25,9 @@ public class SimulatorView extends JFrame {
     private JLabel stepLabel, population;
     private FieldView fieldView;
 
+    // Botão que controla simulação passo por passo
+    private JButton stepButton;
+
     // A map for storing colors for participants in the simulation
     private HashMap colors;
     // A statistics object computing and storing simulation information
@@ -37,7 +40,7 @@ public class SimulatorView extends JFrame {
         stats = new FieldStats();
         colors = new HashMap();
 
-        setTitle("Fox and Rabbit Simulation");
+        setTitle("Fox and Rabbit Simulation - GRUPO 5");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
 
@@ -45,12 +48,32 @@ public class SimulatorView extends JFrame {
 
         fieldView = new FieldView(height, width);
 
+        // Configura botão para continuar
+        stepButton = new JButton("Próximo Passo");
+
+        // Painel superior para o Label de passos
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(stepLabel, BorderLayout.CENTER);
+
+        // Painel inferior para População e Botão
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(stepButton, BorderLayout.NORTH);
+        bottomPanel.add(population, BorderLayout.SOUTH);
+
         Container contents = getContentPane();
-        contents.add(stepLabel, BorderLayout.NORTH);
+        contents.add(topPanel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
-        contents.add(population, BorderLayout.SOUTH);
+        contents.add(bottomPanel, BorderLayout.SOUTH);
+
         pack();
         setVisible(true);
+    }
+
+    /**
+     * Adiciona um listener para o botão de passo.
+     */
+    public void setStepListener(ActionListener listener) {
+        stepButton.addActionListener(listener);
     }
 
     /**
