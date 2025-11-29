@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * A simple predator-prey simulator, based on a field containing
@@ -92,6 +95,43 @@ public class Simulator {
     }
 
     /**
+     * Lê um arquivo de mapa e coloca pedras onde houver um 'X'.
+     */
+    private void loadStonesFromFile(String filename, Field field) {
+        obstacles.clear(); // Limpa pedras antigas
+        
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            int row = 0;
+            
+            // Lê linha por linha
+            while ((line = reader.readLine()) != null && row < field.getDepth()) {
+                // Lê caractere por caractere da linha
+                for (int col = 0; col < line.length() && col < field.getWidth(); col++) {
+                    char symbol = line.charAt(col);
+                    
+                    if (symbol == 'X' || symbol == 'x') {
+                        // Verifica se a posição é válida e está vazia
+                        if (field.getObjectAt(row, col) == null) {
+                            Location loc = new Location(row, col);
+                            Stone stone = new Stone(loc);
+                            field.place(stone, loc);
+                            obstacles.add(stone);
+                        }
+                    }
+                }
+                row++;
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar mapa: " + e.getMessage());
+            // Opcional: Se der erro ao ler o arquivo, gera pedras aleatórias como fallback
+            putStonesInField(field); 
+        }
+    }
+
+    /**
      * Run the simulation from its current state for a reasonably long period.
      */
     public void runLongSimulation() {
@@ -106,7 +146,7 @@ public class Simulator {
             try {
                 // Pausa por 1000 milissegundos (1 segundo) entre cada passo.
                 // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -169,7 +209,10 @@ public class Simulator {
         actors.clear();
         field.clear();
         updatedField.clear();
-        putStonesInField(field);
+
+        // Adicionando as pedras com base no arquivo "map.txt"
+        loadStonesFromFile("map.txt", field);
+
         populate(field);
 
         currentSeason = "spring";

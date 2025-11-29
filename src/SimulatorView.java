@@ -51,6 +51,17 @@ public class SimulatorView extends JFrame {
         // Configura botão para continuar
         stepButton = new JButton("Próximo Passo");
 
+        // Cria uma fonte maior (Estilo: Negrito, Tamanho: 16 ou 18)
+        Font fonteGrande = new Font("SansSerif", Font.CENTER_BASELINE, 20);
+
+        // Aplica a fonte nos componentes
+        stepLabel.setFont(fonteGrande);
+        population.setFont(fonteGrande);
+        stepButton.setFont(fonteGrande);
+
+        // Aumentar o botão em si adicionando margem interna
+        stepButton.setPreferredSize(new Dimension(200, 40));
+
         // Painel superior para o Label de passos
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(stepLabel, BorderLayout.CENTER);
@@ -171,7 +182,7 @@ public class SimulatorView extends JFrame {
      * for your project if you like.
      */
     private class FieldView extends JPanel {
-        private final int GRID_VIEW_SCALING_FACTOR = 6;
+        private final int GRID_VIEW_SCALING_FACTOR = 8;
 
         private int gridWidth, gridHeight;
         private int xScale, yScale;
