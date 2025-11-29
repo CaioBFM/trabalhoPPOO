@@ -1,51 +1,110 @@
 import java.util.List;
 import java.util.Random;
 
-public abstract class Animal {
-    private int age;
+/**
+ * A class representing shared characteristics of animals.
+ * Now extends Actor to fit into the general simulation framework.
+ * 
+ * @author David J. Barnes and Michael Kolling
+ * @version 2002-04-11
+ */
+public abstract class Animal implements Actor {
+    // Whether the animal is alive or not.
     private boolean alive;
-    private static final Random rand = new Random();
-    private Field field;
+    // The animal's position
     private Location location;
+    // The animal's age
+    private int age;
+    // A shared random number generator to control breeding.
+    private static final Random rand = new Random();
 
-    // --- Contrato polimórfico ---
-    public abstract void act(List<Animal> newAnimals);
-
-    protected abstract int getBreedingAge();
-
-    protected abstract int getMaxAge();
-
-    protected abstract int getFoodValue();
-
-    // --- Construtor comum ---
-    public Animal(boolean randomAge, Field field, Location location) {
-        this.age = 0;
-        this.alive = true;
-        this.field = field;
-        setLocation(location); // usa o setter para já posicionar no field
-        if (randomAge) {
-            this.age = rand.nextInt(getMaxAge()); // 0 .. maxAge-1
-        }
+    /**
+     * Create a new animal at age 0.
+     */
+    public Animal() {
+        age = 0;
+        alive = true;
     }
 
-    // --- Utilidades comuns ---
-    protected boolean canBreed() {
-        return age >= getBreedingAge();
-    }
+    /**
+     * Make this animal act - that is: make it do
+     * whatever it wants/needs to do.
+     * (Defined in Actor, implemented in concrete subclasses like Fox/Rabbit)
+     */
+    abstract public void act(Field currentField, Field updatedField, List<Actor> newAnimals);
 
+    abstract public int getMaxAge();
+
+    abstract public double getBreedingProbability();
+
+    abstract public int getMaxLitterSize();
+
+    abstract public boolean canBreed();
+
+    /**
+     * Check whether the animal is alive or not.
+     * 
+     * @return True if the animal is still alive.
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Indicate that the animal is no longer alive.
+     * It is removed from the field automatically.
+     */
     protected void setDead() {
         alive = false;
-        if (location != null && field != null) {
-            field.clear(location);
-            location = null;
-            field = null;
-        }
     }
 
+    /**
+     * Return the animal's location.
+     * 
+     * @return The animal's location.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * Set the animal's location.
+     * 
+     * @param location The new location.
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    /**
+     * Set the animal's location.
+     * 
+     * @param row The vertical coordinate of the location.
+     * @param col The horizontal coordinate of the location.
+     */
+    public void setLocation(int row, int col) {
+        this.location = new Location(row, col);
+    }
+
+    /**
+     * Return the animal's age.
+     * 
+     * @return The animal's age.
+     */
+    protected int getAge() {
+        return age;
+    }
+
+    /**
+     * Set the animal's age.
+     */
+    protected void setAge(int age) {
+        this.age = age;
+    }
+
+    /**
+     * Increase the age.
+     */
     protected void incrementAge() {
         age++;
         if (age > getMaxAge()) {
@@ -53,22 +112,11 @@ public abstract class Animal {
         }
     }
 
-    // --- Acesso controlado ao ambiente ---
-    protected Field getField() {
-        return field;
-    }
-
-    protected Location getLocation() {
-        return location;
-    }
-
-    protected void setLocation(Location newLocation) {
-        if (this.location != null && field != null) {
-            field.clear(this.location);
+    protected int breed() {
+        int births = 0;
+        if (canBreed() && rand.nextDouble() <= getBreedingProbability()) {
+            births = rand.nextInt(getMaxLitterSize()) + 1;
         }
-        this.location = newLocation;
-        if (field != null && newLocation != null) {
-            field.place(this, newLocation);
-        }
+        return births;
     }
 }
