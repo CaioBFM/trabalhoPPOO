@@ -1,27 +1,27 @@
 import java.util.List;
 
 /**
- * Common superclass for all actors in the simulation.
- * Actors include animals, but could also include hunters, weather, etc.
+ * Superclasse comum para todos os atores na simulação.
+ * Atores incluem animais, mas também podem incluir caçadores, árvores, etc.
  * 
- * @author David J. Barnes and Michael Kolling
- * @version 2002-04-11
+ * @author GRUPO 5
+ * @version 2025
  */
 public interface Actor {
     /**
-     * Make this actor act - that is: make it do
-     * whatever it wants/needs to do.
+     * Faz este ator agir - isto é: faz com que ele faça
+     * o que quer que queira ou precise fazer.
      * 
-     * @param currentField The field currently occupied.
-     * @param updatedField The field to transfer to.
-     * @param newActors    A list to receive newly created actors.
+     * @param currentField O campo atualmente ocupado.
+     * @param updatedField O campo para o qual transferir (campo atualizado).
+     * @param newActors    Uma lista para receber atores recém-criados.
      */
     void act(Field currentField, Field updatedField, List<Actor> newActors);
 
     /**
-     * Check whether the actor is alive or active.
+     * Verifica se o ator está vivo ou ativo.
      * 
-     * @return True if the actor is still active/alive.
+     * @return True se o ator ainda estiver ativo/vivo.
      */
     boolean isAlive();
 }

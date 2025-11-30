@@ -3,39 +3,39 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a fox.
- * Foxes age, move, eat rabbits, and die.
- * * @author David J. Barnes and Michael Kolling
+ * Um modelo simples de uma raposa.
+ * Raposas envelhecem, se movem, comem coelhos e morrem.
  * 
- * @version 2002-04-11
+ * @author GRUPO 5
+ * @version 2025
  */
 public class Fox extends Animal implements HuntersPreys {
-    // Characteristics shared by all foxes (static fields).
+    // Características compartilhadas por todas as raposas (campos estáticos).
 
-    // The age at which a fox can start to breed.
+    /** A idade na qual uma raposa pode começar a procriar. */
     private static final int BREEDING_AGE = 10;
-    // The age to which a fox can live.
+    /** A idade até a qual uma raposa pode viver. */
     private static final int MAX_AGE = 150;
-    // The likelihood of a fox breeding.
+    /** A probabilidade de uma raposa procriar. */
     private static final double BREEDING_PROBABILITY = 0.09;
-    // The maximum number of births.
+    /** O número máximo de nascimentos (tamanho da ninhada). */
     private static final int MAX_LITTER_SIZE = 3;
-    // The food value of a single rabbit. In effect, this is the
-    // number of steps a fox can go before it has to eat again.
+    /** O valor nutricional de um único coelho. Com efeito, este é o
+     * número de passos que uma raposa pode dar antes de ter que comer novamente. */
     private static final int RABBIT_FOOD_VALUE = 4;
-    // A shared random number generator to control breeding.
+    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
     private static final Random rand = new Random();
 
-    // Individual characteristics (instance fields).
-    // (Fields age, alive, location moved to Animal superclass)
+    // Características individuais (campos de instância).
 
-    // The fox's food level, which is increased by eating rabbits.
+    /** O nível de comida da raposa, que é aumentado ao comer coelhos. */
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
-     * and not hungry) or with random age.
-     * * @param randomAge If true, the fox will have random age and hunger level.
+     * Cria uma raposa. Uma raposa pode ser criada como recém-nascida (idade zero
+     * e sem fome) ou com idade aleatória.
+     * 
+     * @param randomAge Se true, a raposa terá idade e nível de fome aleatórios.
      */
     public Fox(boolean randomAge) {
         super();
@@ -43,22 +43,25 @@ public class Fox extends Animal implements HuntersPreys {
             setAge(rand.nextInt(MAX_AGE));
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
         } else {
-            // leave age at 0
+            // deixa a idade em 0
             foodLevel = RABBIT_FOOD_VALUE;
         }
     }
 
     /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
-     * or die of old age.
-     * (Renamed from 'hunt' to 'act' to match superclass)
+     * Isso é o que a raposa faz na maior parte do tempo: ela caça
+     * coelhos. No processo, ela pode procriar, morrer de fome
+     * ou morrer de velhice.
+     * 
+     * @param currentField O campo atualmente ocupado.
+     * @param updatedField O campo para o qual transferir (campo atualizado).
+     * @param newFoxes    Uma lista para receber atores recém-criados.
      */
     public void act(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
         if (isAlive()) {
-            // New foxes are born into adjacent locations.
+            // Novas raposas nascem em localizações adjacentes.
             int births = breed();
             for (int b = 0; b < births; b++) {
                 Fox newFox = new Fox(false);
@@ -67,7 +70,7 @@ public class Fox extends Animal implements HuntersPreys {
                 newFox.setLocation(loc);
                 updatedField.place(newFox, loc);
             }
-            // Move towards the source of food if found.
+            // Move-se em direção à fonte de comida se encontrada.
             Location newLocation = findFood(currentField, getLocation());
             if (newLocation == null) { // no food found - move randomly
                 newLocation = updatedField.freeAdjacentLocation(getLocation());
@@ -76,14 +79,14 @@ public class Fox extends Animal implements HuntersPreys {
                 setLocation(newLocation);
                 updatedField.place(this, newLocation);
             } else {
-                // can neither move nor stay - overcrowding - all locations taken
+                // não pode nem se mover nem ficar - superpopulação - todas as localizações ocupadas
                 setDead();
             }
         }
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Torna esta raposa mais faminta. Isso pode resultar na morte da raposa.
      */
     private void incrementHunger() {
         foodLevel--;
@@ -93,11 +96,11 @@ public class Fox extends Animal implements HuntersPreys {
     }
 
     /**
-     * Tell the fox to look for rabbits adjacent to its current location.
+     * Diz à raposa para procurar coelhos adjacentes à sua localização atual.
      * 
-     * @param field    The field in which it must look.
-     * @param location Where in the field it is located.
-     * @return Where food was found, or null if it wasn't.
+     * @param field    O campo no qual ela deve procurar.
+     * @param location Onde no campo ela está localizada.
+     * @return Onde a comida foi encontrada, ou null se não foi.
      */
     private Location findFood(Field field, Location location) {
         Iterator adjacentLocations = field.adjacentLocations(location);
@@ -108,7 +111,7 @@ public class Fox extends Animal implements HuntersPreys {
             if (animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
                 if (rabbit.isAlive()) {
-                    rabbit.setDead(); // Replaced setEaten with setDead
+                    rabbit.setDead(); // Substituiu setEaten por setDead
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }

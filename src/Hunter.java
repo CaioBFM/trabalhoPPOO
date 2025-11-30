@@ -14,28 +14,28 @@ import java.util.Random;
 public class Hunter extends Animal {
     // Características estáticas.
 
-    // Depois de matar certa quantidade de animais, o caçador morre
+    /** Depois de matar certa quantidade de animais, o caçador morre */
     private static final int MAX_KILLS = 100;
-    // Quantidade de abates necessários para se reproduzir.
+    /** Quantidade de abates necessários para se reproduzir. */
     private static final int KILLS_TO_BREED = 2;
-    // Energia máxima.
+    /** Energia máxima. */
     private static final int MAX_ENERGY = 200;
-    // Energia perdida por passo.
+    /** Energia perdida por passo. */
     private static final int ENERGY_LOSS = 1;
-    // Tamanho máximo da ninhada.
+    /** Tamanho máximo da ninhada. */
     private static final int MAX_LITTER_SIZE = 3;
-    // Probabilidade de reprodução.
+    /** Probabilidade de reprodução. */
     private static final double BREEDING_PROBABILITY = 1;
-    // Idade máxima.
+    /** Idade máxima. */
     private static final int MAX_AGE = 70;
-    // Gerador de números aleatórios.
+    /** Gerador de números aleatórios. */
     private static final Random rand = new Random();
 
     // Características individuais.
 
-    // Nível de energia do caçador.
+    /** Nível de energia do caçador. */
     private int energy;
-    // Contador de animais abatidos.
+    /** Contador de animais abatidos. */
     private int killCount;
 
     /**

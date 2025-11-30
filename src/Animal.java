@@ -2,24 +2,24 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A class representing shared characteristics of animals.
- * Now extends Actor to fit into the general simulation framework.
+ * Uma classe que representa características compartilhadas de animais.
+ * Estende de Actor para se adequar à estrutura geral de simulação.
  * 
- * @author David J. Barnes and Michael Kolling
- * @version 2002-04-11
+ * @author GRUPO 5
+ * @version 2025
  */
 public abstract class Animal implements Actor {
-    // Whether the animal is alive or not.
+    /** Se o animal está vivo ou não */
     private boolean alive;
-    // The animal's position
+    /** A localização do animal */
     private Location location;
-    // The animal's age
+    /** A idade do animal */
     private int age;
-    // A shared random number generator to control breeding.
+    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
     private static final Random rand = new Random();
 
     /**
-     * Create a new animal at age 0.
+     * Cria um novo animal com idade 0.
      */
     public Animal() {
         age = 0;
@@ -27,83 +27,99 @@ public abstract class Animal implements Actor {
     }
 
     /**
-     * Make this animal act - that is: make it do
-     * whatever it wants/needs to do.
-     * (Defined in Actor, implemented in concrete subclasses like Fox/Rabbit)
+     * Faz este animal agir - isto é: faz com que ele faça
+     * o que quer que queira ou precise fazer.
+     * (Definido em Actor, implementado em subclasses concretas como Fox/Rabbit, etc)
      */
     abstract public void act(Field currentField, Field updatedField, List<Actor> newAnimals);
 
+    /**
+     * Retorna a idade máxima permitida para esta espécie.
+     * @return A idade máxima.
+     */
     abstract public int getMaxAge();
 
+    /**
+     * Retorna a probabilidade de reprodução deste animal.
+     * @return A probabilidade de reprodução (entre 0 e 1).
+     */
     abstract public double getBreedingProbability();
 
+    /**
+     * Retorna o número máximo de filhotes que podem nascer de uma vez.
+     * @return O tamanho máximo da ninhada.
+     */
     abstract public int getMaxLitterSize();
 
+    /**
+     * Verifica se o animal atingiu a idade reprodutiva.
+     * @return True se o animal tiver idade suficiente para procriar.
+     */
     abstract public boolean canBreed();
 
     /**
-     * Check whether the animal is alive or not.
+     * Verifica se o animal está vivo ou não.
      * 
-     * @return True if the animal is still alive.
+     * @return True se o animal ainda estiver vivo.
      */
     public boolean isAlive() {
         return alive;
     }
 
     /**
-     * Indicate that the animal is no longer alive.
-     * It is removed from the field automatically.
+     * Indica que o animal não está mais vivo.
+     * Ele é removido do campo automaticamente.
      */
     protected void setDead() {
         alive = false;
     }
 
     /**
-     * Return the animal's location.
+     * Retorna a localização do animal.
      * 
-     * @return The animal's location.
+     * @return A localização do animal.
      */
     public Location getLocation() {
         return location;
     }
 
     /**
-     * Set the animal's location.
+     * Define a localização do animal.
      * 
-     * @param location The new location.
+     * @param location A nova localização.
      */
     public void setLocation(Location location) {
         this.location = location;
     }
 
     /**
-     * Set the animal's location.
+     * Define a localização do animal.
      * 
-     * @param row The vertical coordinate of the location.
-     * @param col The horizontal coordinate of the location.
+     * @param row A coordenada vertical da localização.
+     * @param col A coordenada horizontal da localização.
      */
     public void setLocation(int row, int col) {
         this.location = new Location(row, col);
     }
 
     /**
-     * Return the animal's age.
+     * Retorna a idade do animal.
      * 
-     * @return The animal's age.
+     * @return A idade do animal.
      */
     protected int getAge() {
         return age;
     }
 
     /**
-     * Set the animal's age.
+     * Define a idade do animal.
      */
     protected void setAge(int age) {
         this.age = age;
     }
 
     /**
-     * Increase the age.
+     * Aumenta a idade em uma unidade.
      */
     protected void incrementAge() {
         age++;
@@ -112,6 +128,12 @@ public abstract class Animal implements Actor {
         }
     }
 
+    /**
+     * Gera um número de nascimentos, se o animal puder procriar.
+     * O número de nascimentos é aleatório, baseado na probabilidade de reprodução
+     * e no tamanho máximo da ninhada.
+     * * @return O número de nascimentos (pode ser zero).
+     */
     protected int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= getBreedingProbability()) {
