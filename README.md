@@ -64,7 +64,6 @@ Define:
 - estado de vida
 - localização
 - lógica de envelhecimento
-- método abstrato `act(...)`
 - acesso e modificação da posição
 
 Subclasses:
@@ -83,38 +82,20 @@ Subclasses:
 - Procura comida
 - Implementa **HuntersPreys** (pode ser caçada por caçadores)
 
-#### 🧍‍♂️ Hunter (opcional)
+#### 🧍‍♂️ Hunter
 
 - Predador de coelhos e raposas
+- Come frutas para recarregar energia
 - Não implementa HuntersPreys
 
----
+#### 🌳 Tree
 
-### **5. Interface Marcadora: HuntersPreys**
-
-Interface **intencionalmente vazia** que marca animais que podem ser caçados.
-
-Segue o padrão **Marker Interface Pattern**, permitindo:
-
-- adicionar novas presas sem alterar o código do simulador
-- filtrar rapidamente animais caçáveis via `instanceof`
-- manter a simulação simples e extensível
-
-Uso típico:
-
-```java
-if (object instanceof HuntersPreys prey) {
-    if (prey.isAlive()) {
-        prey.setDead();
-        killCount++;
-        return where;
-    }
-}
-```
+- Produz frutos ao longo do tempo
+- Implementa Actors
 
 ---
 
-### **6. Obstáculos**
+### **5. Obstáculos**
 
 Uma segunda interface marcadora, `Obstacles`, identifica objetos que bloqueiam movimento.
 
@@ -122,17 +103,18 @@ Atualmente:
 
 - `Stone` representa uma pedra fixa no mapa.
 
-Outros obstáculos podem ser adicionados facilmente (por exemplo, rios, árvores, montanhas).
+Outros obstáculos podem ser adicionados facilmente (por exemplo, rios, montanhas).
 
 ---
 
 ## 🧠 Arquitetura Geral (Resumo)
 
-- `Animal` é abstrata.
+- `Actors` e `Animal` são abstratas.
+- `Animal` extende `Actors`.
 - `Rabbit` e `Fox` estendem `Animal`.
 - `Rabbit` e `Fox` implementam `HuntersPreys`.
 - `Stone` implementa `Obstacles`.
-- `Simulator` gerencia listas de `Animal` e `Obstacles`.
+- `Simulator` gerencia listas de `Actors` e `Obstacles`.
 - `Field` representa o ambiente.
 - `Location` representa posições.
 
@@ -154,10 +136,18 @@ O projeto explora:
 javac */*.java
 ```
 
+```powershell
+javac -d bin src/*.java
+```
+
 2. Execute a aplicação pelo método `main`
 
 ```bash
-java SimulatorMain
+java Principal
+```
+
+```powershell
+java -cp bin Principal
 ```
 
 3. A simulação será iniciada e o ambiente começará a evoluir passo a passo.
@@ -173,23 +163,29 @@ java SimulatorMain
 
 ## 📂 Estrutura dos Arquivos
 
+```text
 .
-├── .vscode/ # Configurações do VS Code
-├── bin/ # Arquivos compilados (.class)
-├── src/ # Código-fonte Java
-│ ├── Animal.java
-│ ├── Rabbit.java
-│ ├── Fox.java
-│ ├── Hunter.java
-│ ├── Field.java
-│ ├── Location.java
-│ ├── HuntersPreys.java
-│ ├── Obstacles.java
-│ ├── Stone.java
-│ ├── Simulator.java
-│ └── SimulatorMain.java
-├── PropostaTrabalhoPratico.pdf # Documento original do trabalho
-└── README.md # Este arquivo
+├── .vscode/                     # Configurações do VS Code
+├── bin/                         # Arquivos compilados (.class)
+├── src/                         # Código-fonte Java
+│   ├── Actor.java
+│   ├── Animal.java
+│   ├── Counter.java
+│   ├── Field.java
+│   ├── FieldStats.java
+│   ├── Fox.java
+│   ├── Hunter.java
+│   ├── HunterPreys.java
+│   ├── Location.java
+│   ├── Obstacles.java
+│   ├── Principal.java
+│   ├── Simulator.java
+│   ├── SimulatorView.java
+│   ├── Stone.java
+│   └── Tree.java
+├── PropostaTrabalhoPratico.pdf  # Documento original do trabalho
+└── README.md                    # Este arquivo
+```
 
 ---
 
