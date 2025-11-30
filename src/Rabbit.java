@@ -2,33 +2,29 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A simple model of a rabbit.
- * Rabbits age, move, breed, and die.
- * * @author David J. Barnes and Michael Kolling
- * 
- * @version 2002-04-11
+ * Um modelo simples de um coelho.
+ * Coelhos envelhecem, se movem, procriam e morrem.
+ * @author GRUPO 05
+ * @version 2025
  */
 public class Rabbit extends Animal implements HuntersPreys {
-    // Characteristics shared by all rabbits (static fields).
+    // Características compartilhadas por todos os coelhos (campos estáticos).
 
-    // The age at which a rabbit can start to breed.
+    /** A idade na qual um coelho pode começar a procriar. */
     private static final int BREEDING_AGE = 5;
-    // The age to which a rabbit can live.
+    /** A idade até a qual um coelho pode viver. */
     private static final int MAX_AGE = 50;
-    // The likelihood of a rabbit breeding.
+    /** A probabilidade de um coelho procriar. */
     private static final double BREEDING_PROBABILITY = 0.15;
-    // The maximum number of births.
+    /** O número máximo de nascimentos (tamanho da ninhada). */
     private static final int MAX_LITTER_SIZE = 5;
-    // A shared random number generator to control breeding.
+    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
     private static final Random rand = new Random();
 
-    // Individual characteristics (instance fields).
-    // (Fields age, alive, location moved to Animal superclass)
-
     /**
-     * Create a new rabbit. A rabbit may be created with age
-     * zero (a new born) or with a random age.
-     * * @param randomAge If true, the rabbit will have a random age.
+     * Cria um novo coelho. Um coelho pode ser criado com idade
+     * zero (um recém-nascido) ou com uma idade aleatória.
+     * @param randomAge Se true, o coelho terá uma idade aleatória.
      */
     public Rabbit(boolean randomAge) {
         super();
@@ -38,9 +34,12 @@ public class Rabbit extends Animal implements HuntersPreys {
     }
 
     /**
-     * This is what the rabbit does most of the time - it runs
-     * around. Sometimes it will breed or die of old age.
-     * (Renamed from 'run' to 'act' to match superclass)
+     * Isso é o que o coelho faz na maior parte do tempo - ele corre
+     * por aí. Às vezes ele procria ou morre de velhice.
+     * 
+     * @param currentField O campo atualmente ocupado.
+     * @param updatedField O campo para o qual transferir (campo atualizado).
+     * @param newRabbits   Uma lista para receber atores recém-criados.
      */
     public void act(Field currentField, Field updatedField, List<Actor> newRabbits) {
         incrementAge();
@@ -54,12 +53,12 @@ public class Rabbit extends Animal implements HuntersPreys {
                 updatedField.place(newRabbit, loc);
             }
             Location newLocation = updatedField.freeAdjacentLocation(getLocation());
-            // Only transfer to the updated field if there was a free location
+            // Transfere para o campo atualizado apenas se houver uma localização livre
             if (newLocation != null) {
                 setLocation(newLocation);
                 updatedField.place(this, newLocation);
             } else {
-                // can neither move nor stay - overcrowding - all locations taken
+                // não pode nem se mover nem ficar - superpopulação - todas as localizações ocupadas
                 setDead();
             }
         }

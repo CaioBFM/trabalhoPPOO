@@ -12,54 +12,62 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * A simple predator-prey simulator, based on a field containing
- * rabbits and foxes.
- * * @author David J. Barnes and Michael Kolling
- * 
- * @version 2002-04-09
+ * Um simulador simples de predador-presa, baseado em um campo contendo
+ * coelhos e raposas.
+ * @author GRUPO 05
+ * @version 2025
  */
 public class Simulator {
-    // The private static final variables represent
-    // configuration information for the simulation.
+    // As variáveis estáticas finais privadas representam
+    // informações de configuração para a simulação.
+
+    /** A largura padrão do campo. */
     private static final int DEFAULT_WIDTH = 50;
+    /** A profundidade padrão do campo. */
     private static final int DEFAULT_DEPTH = 50;
+    /** A probabilidade de uma raposa ser criada em qualquer posição do campo. */
     private static final double FOX_CREATION_PROBABILITY = 0.02;
+    /** A probabilidade de um coelho ser criado em qualquer posição do campo. */
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
-    private static final double HUNTER_CREATION_PROBABILITY = 0.01; // Baixa densidade
+    /** A probabilidade de um caçador ser criado (Baixa densidade). */
+    private static final double HUNTER_CREATION_PROBABILITY = 0.01; 
+    /** A probabilidade de uma árvore ser criada. */
     private static final double TREE_CREATION_PROBABILITY = 0.05;
-
-    // The list of actors in the field (renamed from animals)
+    
+    /** A lista de atores no campo (renomeado de animais para ser genérico) */
     private List<Actor> actors;
-    // The list of actors just born
+    /** A lista de atores que acabaram de nascer */
     private List<Actor> newActors;
-
+    /** Lista de obstáculos (pedras, etc) */
     private List<Obstacles> obstacles;
-    // The current state of the field.
+    /** O estado atual do campo */
     private Field field;
-    // A second field, used to build the next stage of the simulation.
+    /** Um segundo campo, usado para construir o próximo estágio da simulação. */
     private Field updatedField;
-    // The current step of the simulation.
+    /** O passo atual da simulação. */
     private int step;
-    // A graphical view of the simulation.
+    /** Uma visualização gráfica da simulação. */
     private SimulatorView view;
-
+    /** A estação do ano atual (string). */
     private String currentSeason;
-
+    /** Duração de cada estação em passos. */
     private static final int SEASON_LENGTH = 50;
-
+    /** Gerador de números aleatórios */
     private Random rand = new Random();
-
+    /** Flag para controlar se a simulação está rodando ou parada. */
     private boolean notSimulating;
 
     /**
-     * Construct a simulation field with default size.
+     * Constrói um campo de simulação com tamanho padrão.
      */
     public Simulator() {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
 
     /**
-     * Create a simulation field with the given size.
+     * Cria um campo de simulação com o tamanho fornecido.
+     * @param depth A profundidade (altura) do campo.
+     * @param width A largura do campo.
      */
     public Simulator(int depth, int width) {
         if (width <= 0 || depth <= 0) {
@@ -69,15 +77,17 @@ public class Simulator {
             width = DEFAULT_WIDTH;
         }
 
-        // Use a generic list for any Actor
+        // Usa uma lista genérica para qualquer Actor
         actors = new ArrayList<>();
         newActors = new ArrayList<>();
         obstacles = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
-        // Create a view of the state of each location in the field.
+        // Cria uma visualização do estado de cada localização no campo.
         view = new SimulatorView(depth, width);
+
+        // Define as cores para cada classe de ator na visualização
         view.setColor(Fox.class, Color.blue);
         view.setColor(Rabbit.class, Color.orange);
         view.setColor(Hunter.class, Color.magenta);
@@ -85,6 +95,7 @@ public class Simulator {
         view.setColor(Stone.class, Color.gray);
 
         // Conectar o botão da View à lógica do Simulator
+        // Isso permite controlar o "passo a passo" pela interface gráfica
         view.setStepListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,14 +109,16 @@ public class Simulator {
         });
 
         notSimulating = true;
-        currentSeason = "spring";
+        currentSeason = "spring"; // Começa na primavera
 
-        // Setup a valid starting point.
+        // Configura um ponto de partida válido.
         reset();
     }
 
     /**
      * Lê um arquivo de mapa e coloca pedras onde houver um 'X'.
+     * @param filename O caminho do arquivo de texto.
+     * @param field O campo onde as pedras serão colocadas.
      */
     private void loadStonesFromFile(String filename, Field field) {
         obstacles.clear(); // Limpa pedras antigas
@@ -142,14 +155,17 @@ public class Simulator {
     }
 
     /**
-     * Run the simulation from its current state for a reasonably long period.
+     * Executa a simulação a partir do seu estado atual por um período razoavelmente longo.
+     * (Define 500 passos como padrão).
      */
     public void runLongSimulation() {
         simulate(500);
     }
 
     /**
-     * Run the simulation from its current state for the given number of steps.
+     * Executa a simulação a partir do seu estado atual pelo número fornecido de passos.
+     * Para antes se a simulação deixar de ser viável (ex: extinção).
+     * @param numSteps O número de passos a executar.
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
@@ -167,31 +183,32 @@ public class Simulator {
     }
 
     /**
-     * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of each actor.
+     * Executa a simulação a partir do seu estado atual por um único passo.
+     * Itera sobre todo o campo atualizando o estado de cada ator.
      */
     public void simulateOneStep() {
         step++;
         newActors.clear();
 
-        // let all actors act
+        // Deixa todos os atores agirem
         for (Iterator iter = actors.iterator(); iter.hasNext();) {
             Object obj = iter.next();
-            // Using Actor instead of Animal allows for polymorphism
+            // Usar Actor em vez de Animal permite polimorfismo (animais, caçadores, etc.)
             if (obj instanceof Actor) {
                 Actor actor = (Actor) obj;
                 if (actor.isAlive()) {
                     actor.act(field, updatedField, newActors);
                 } else {
-                    iter.remove(); // remove dead actors from collection
+                    iter.remove(); // remove atores mortos da coleção
                 }
             } else {
                 System.out.println("found unknown actor");
             }
         }
-        // add new born actors to the list of actors
+        // Adiciona atores recém-nascidos à lista principal
         actors.addAll(newActors);
 
+        // Obstáculos (como pedras) não agem, mas precisam ser copiados para o novo campo
         for (Obstacles obstacle : obstacles) {
             if (obstacle instanceof Stone) {
                 Stone stone = (Stone) obstacle;
@@ -201,7 +218,7 @@ public class Simulator {
             }
         }
 
-        // Swap the field and updatedField at the end of the step.
+        // Troca o campo (field) e o campo atualizado (updatedField) ao final do passo.
         Field temp = field;
         field = updatedField;
         updatedField = temp;
@@ -209,12 +226,13 @@ public class Simulator {
 
         updateSeason();
 
-        // display the new field on screen
+        // Exibe o novo campo na tela
         view.showStatus(step, field, currentSeason);
     }
 
     /**
-     * Reset the simulation to a starting position.
+     * Redefine a simulação para uma posição inicial.
+     * Limpa o campo e repopula.
      */
     public void reset() {
         step = 0;
@@ -230,12 +248,13 @@ public class Simulator {
         currentSeason = "spring";
         updateSeason();
 
-        // Show the starting state in the view.
+        // Mostra o estado inicial na visualização.
         view.showStatus(step, field, currentSeason);
     }
 
     /**
-     * Place stones randomly in the field.
+     * Coloca pedras aleatoriamente no campo (Fallback caso o mapa falhe).
+     * @param field O campo onde colocar as pedras.
      */
     private void putStonesInField(Field field) {
         obstacles.clear();
@@ -256,7 +275,11 @@ public class Simulator {
     }
 
     /**
-     * Place a stone and propagate its effect to surrounding locations.
+     * Coloca uma pedra e propaga seu efeito para localizações vizinhas
+     * (cria aglomerados de pedras).
+     * @param row A linha central.
+     * @param col A coluna central.
+     * @param field O campo atual.
      */
     private void placeAndPropagateStone(int row, int col, Field field) {
         for (int i = 0; i < 6; i++) {
@@ -273,7 +296,8 @@ public class Simulator {
     }
 
     /**
-     * Populate the field with foxes and rabbits.
+     * Popula o campo com raposas, coelhos, caçadores e árvores.
+     * @param field O campo a ser populado.
      */
     private void populate(Field field) {
         for (int row = 0; row < field.getDepth(); row++) {
@@ -314,6 +338,10 @@ public class Simulator {
         Collections.shuffle(actors);
     }
 
+    /**
+     * Atualiza a estação do ano atual baseada no número de passos.
+     * A estação muda a cada SEASON_LENGTH passos.
+     */
     private void updateSeason() {
         int seasonIndex = (step / SEASON_LENGTH) % 4;
         switch (seasonIndex) {

@@ -12,20 +12,21 @@ import java.util.Random;
 public class Tree implements Actor {
     // Características compartilhadas (campos estáticos).
 
-    // O número máximo de frutos que uma árvore pode ter acumulado.
+    /** O número máximo de frutos que uma árvore pode ter acumulado. */
     private static final int MAX_FRUITS = 5;
-    // A taxa de crescimento (chances de produzir um fruto a cada passo).
+    /** A taxa de crescimento (chances de produzir um fruto a cada passo). */
     private static final double GROWTH_RATE = 0.05;
+    /** Gerador de números aleatório */
     private static final Random rand = new Random();
 
     // Características individuais (campos de instância).
 
-    // Quantidade atual de frutos na árvore.
+    /** Quantidade atual de frutos na árvore. */
     private int fruitCount;
-    // Localização da árvore (necessário pois ela não herda de Animal).
+    /** Localização da árvore (necessário pois ela não herda de Animal). */
     private Location location;
-    // Árvores estão sempre vivas na simulação atual (a menos que sejam destruídas,
-    // o que não foi especificado).
+    /** Árvores estão sempre vivas na simulação atual (a menos que sejam destruídas,
+     * o que não foi especificado).  */
     private boolean alive;
 
     /**
@@ -41,6 +42,10 @@ public class Tree implements Actor {
      * O que a árvore faz a cada etapa: tenta produzir novos frutos.
      * Como é um ator estático, ela deve se manter na mesma posição no campo
      * atualizado.
+     * 
+     * @param currentField O campo atualmente ocupado.
+     * @param updatedField O campo para o qual transferir (campo atualizado).
+     * @param newActors    Uma lista para receber atores recém-criados.
      */
     public void act(Field currentField, Field updatedField, List newActors) {
         if (isAlive()) {
