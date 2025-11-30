@@ -45,6 +45,7 @@ public class Rabbit extends Animal implements HuntersPreys {
      * @param updatedField O campo para o qual transferir (campo atualizado).
      * @param newRabbits   Uma lista para receber atores recém-criados.
      */
+    @Override
     public void act(Field currentField, Field updatedField, List<Actor> newRabbits) {
         incrementAge();
         if (isAlive()) {

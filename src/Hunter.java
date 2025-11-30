@@ -17,17 +17,17 @@ public class Hunter extends Animal {
     /** Depois de matar certa quantidade de animais, o caçador morre */
     private static final int MAX_KILLS = 100;
     /** Quantidade de abates necessários para se reproduzir. */
-    private static final int KILLS_TO_BREED = 2;
+    private static final int KILLS_TO_BREED = 3;
     /** Energia máxima. */
-    private static final int MAX_ENERGY = 200;
+    private static final int MAX_ENERGY = 150;
     /** Energia perdida por passo. */
     private static final int ENERGY_LOSS = 1;
     /** Tamanho máximo da ninhada. */
     private static final int MAX_LITTER_SIZE = 3;
     /** Probabilidade de reprodução. */
-    private static final double BREEDING_PROBABILITY = 1;
+    private static final double BREEDING_PROBABILITY = 0.50;
     /** Idade máxima. */
-    private static final int MAX_AGE = 70;
+    private static final int MAX_AGE = 50;
     /** Gerador de números aleatórios. */
     private static final Random rand = new Random();
 
@@ -57,6 +57,7 @@ public class Hunter extends Animal {
      * O comportamento do caçador a cada passo.
      * Ele perde energia, caça ou coleta frutos, e tenta se reproduzir.
      */
+    @Override
     public void act(Field currentField, Field updatedField, List<Actor> newHunters) {
         incrementAge();
         decresceEnergy();

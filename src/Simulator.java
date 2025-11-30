@@ -50,7 +50,8 @@ public class Simulator {
     /** Uma visualização gráfica da simulação. */
     private SimulatorView view;
     /** A estação do ano atual (string). */
-    private String currentSeason;
+    private static String currentSeason;
+
     /** Duração de cada estação em passos. */
     private static final int SEASON_LENGTH = 50;
     /** Gerador de números aleatórios */
@@ -151,7 +152,8 @@ public class Simulator {
             }
             reader.close();
         } catch (IOException e) {
-            System.out.println("Erro ao carregar mapa: " + e.getMessage());
+            String mensagemExceção = "Erro ao carregar mapa: " + e.getMessage();
+            JOptionPane.showMessageDialog(null, mensagemExceção + "\n Gerando pedras aleatórias...");
             // Opcional: Se der erro ao ler o arquivo, gera pedras aleatórias como fallback
             putStonesInField(field);
         }
@@ -177,9 +179,9 @@ public class Simulator {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
             notSimulating = false;
             try {
-                // Pausa por _ milissegundos entre cada passo.
+                // Pausa por X milissegundos entre cada passo.
                 // Aumente este número para deixar mais lento (ex: 500 para meio segundo).
-                Thread.sleep(50);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -195,7 +197,6 @@ public class Simulator {
     public void simulateOneStep() {
         step++;
         newActors.clear();
-
         // Deixa todos os atores agirem
         for (Iterator iter = actors.iterator(); iter.hasNext();) {
             Object obj = iter.next();
@@ -205,7 +206,7 @@ public class Simulator {
                 if (actor.isAlive()) {
                     actor.act(field, updatedField, newActors);
                 } else {
-                    iter.remove(); // remove atores mortos da coleção
+                    iter.remove();
                 }
             } else {
                 System.out.println("found unknown actor");
@@ -248,7 +249,7 @@ public class Simulator {
         updatedField.clear();
 
         // Adicionando as pedras com base nos arquivos de mapa dentro da pasta mapas
-        loadStonesFromFile("src/mapas/map3.txt", field);
+        loadStonesFromFile("src/mapas/map.txt", field);
 
         populate(field);
 
@@ -369,5 +370,14 @@ public class Simulator {
                 currentSeason = "winter";
                 break;
         }
+    }
+
+    /**
+     * Retorna a estação atual da simualação.
+     * 
+     * @return A estação atual da simulação.
+     */
+    public static String getCurrentSeason() {
+        return currentSeason;
     }
 }

@@ -12,7 +12,7 @@ public class Stone implements Obstacles {
     /**
      * O número padrão de pedras a serem geradas aleatoriamente (se não usar mapa).
      */
-    public static final int NUM_STONES = 10;
+    public static final int NUM_STONES = 15;
 
     /**
      * Cria uma nova pedra em uma localização específica.

@@ -14,6 +14,8 @@ public class Tree implements Actor {
 
     /** O número máximo de frutos que uma árvore pode ter acumulado. */
     private static final int MAX_FRUITS = 5;
+    /** Valor de energia que um fruto retorna. */
+    private static final int FRUIT_VALUE = 40;
     /** A taxa de crescimento (chances de produzir um fruto a cada passo). */
     private static final double GROWTH_RATE = 0.05;
     /** Gerador de números aleatório */
@@ -49,25 +51,30 @@ public class Tree implements Actor {
      * @param updatedField O campo para o qual transferir (campo atualizado).
      * @param newActors    Uma lista para receber atores recém-criados.
      */
+    @Override
     public void act(Field currentField, Field updatedField, List newActors) {
-        if (isAlive()) {
-            growFruit();
-            // Árvores não se movem, então ocupam o mesmo lugar no novo campo.
-            if (updatedField.getObjectAt(location) == null) {
-                updatedField.place(this, location);
-            } else {
-                // Se algo tomou o lugar (erro de lógica ou colisão), a árvore deixa de existir.
-                alive = false;
-            }
-        }
+        String currentSeason = Simulator.getCurrentSeason();
+        growFruit(currentSeason);
+        // Árvores não se movem, então ocupam o mesmo lugar no novo campo.
+        updatedField.place(this, location);
     }
 
     /**
-     * Tenta crescer um fruto baseado na taxa de crescimento.
+     * Tenta crescer um fruto baseado na taxa de crescimento e na estação do ano
+     * (estéril durante outono e inverno e mais produtiva durante primavera).
      */
-    private void growFruit() {
-        if (fruitCount < MAX_FRUITS && rand.nextDouble() <= GROWTH_RATE) {
-            fruitCount++;
+    private void growFruit(String currentSeason) {
+        if (fruitCount < MAX_FRUITS) {
+            if (currentSeason.equals("summer")) {
+                if (rand.nextDouble() <= GROWTH_RATE) {
+                    fruitCount++;
+                }
+            }
+            if (currentSeason.equals("spring")) {
+                if (rand.nextDouble() <= GROWTH_RATE + 0.02) {
+                    fruitCount++;
+                }
+            }
         }
     }
 
@@ -79,8 +86,7 @@ public class Tree implements Actor {
     public int pickFruit() {
         if (fruitCount > 0) {
             fruitCount--;
-            // Valor de energia arbitrário para um fruto
-            return 40;
+            return FRUIT_VALUE;
         } else {
             return 0;
         }

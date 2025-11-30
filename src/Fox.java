@@ -17,7 +17,7 @@ public class Fox extends Animal implements HuntersPreys {
     /** A idade até a qual uma raposa pode viver. */
     private static final int MAX_AGE = 150;
     /** A probabilidade de uma raposa procriar. */
-    private static final double BREEDING_PROBABILITY = 0.09;
+    private static final double BREEDING_PROBABILITY = 0.4;
     /** O número máximo de nascimentos (tamanho da ninhada). */
     private static final int MAX_LITTER_SIZE = 3;
     /**
@@ -61,6 +61,7 @@ public class Fox extends Animal implements HuntersPreys {
      * @param updatedField O campo para o qual transferir (campo atualizado).
      * @param newFoxes     Uma lista para receber atores recém-criados.
      */
+    @Override
     public void act(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
