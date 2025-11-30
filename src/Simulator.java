@@ -30,7 +30,7 @@ public class Simulator {
     /** A probabilidade de um coelho ser criado em qualquer posição do campo. */
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
     /** A probabilidade de um caçador ser criado (Baixa densidade). */
-    private static final double HUNTER_CREATION_PROBABILITY = 0.01; 
+    private static final double HUNTER_CREATION_PROBABILITY = 0.05; 
     /** A probabilidade de uma árvore ser criada. */
     private static final double TREE_CREATION_PROBABILITY = 0.05;
     
