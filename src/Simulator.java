@@ -223,7 +223,7 @@ public class Simulator {
         updatedField.clear();
 
         // Adicionando as pedras com base nos arquivos de mapa dentro da pasta mapas
-        loadStonesFromFile("mapas/map3.txt", field);
+        loadStonesFromFile("src/mapas/map.txt", field);
 
         populate(field);
 
