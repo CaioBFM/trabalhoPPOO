@@ -4,6 +4,7 @@ import java.util.Random;
 /**
  * Um modelo simples de um coelho.
  * Coelhos envelhecem, se movem, procriam e morrem.
+ * 
  * @author GRUPO 05
  * @version 2025
  */
@@ -18,12 +19,15 @@ public class Rabbit extends Animal implements HuntersPreys {
     private static final double BREEDING_PROBABILITY = 0.15;
     /** O número máximo de nascimentos (tamanho da ninhada). */
     private static final int MAX_LITTER_SIZE = 5;
-    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
+    /**
+     * Um gerador de números aleatórios compartilhado para controlar a reprodução.
+     */
     private static final Random rand = new Random();
 
     /**
      * Cria um novo coelho. Um coelho pode ser criado com idade
      * zero (um recém-nascido) ou com uma idade aleatória.
+     * 
      * @param randomAge Se true, o coelho terá uma idade aleatória.
      */
     public Rabbit(boolean randomAge) {
@@ -58,7 +62,8 @@ public class Rabbit extends Animal implements HuntersPreys {
                 setLocation(newLocation);
                 updatedField.place(this, newLocation);
             } else {
-                // não pode nem se mover nem ficar - superpopulação - todas as localizações ocupadas
+                // não pode nem se mover nem ficar - superpopulação - todas as localizações
+                // ocupadas
                 setDead();
             }
         }

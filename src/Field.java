@@ -96,7 +96,7 @@ public class Field {
      * 
      * @param location A localização a partir da qual gerar uma adjacência.
      * @return Uma localização válida dentro da área da grade. Este
-     * pode ser o mesmo objeto que o parâmetro location.
+     *         pode ser o mesmo objeto que o parâmetro location.
      */
     public Location randomAdjacentLocation(Location location) {
         int row = location.getRow();
@@ -123,8 +123,8 @@ public class Field {
      * 
      * @param location A localização a partir da qual gerar uma adjacência.
      * @return Uma localização válida dentro da área da grade. Esta pode ser o
-     * mesmo objeto que o parâmetro location, ou null se todas as
-     * localizações ao redor estiverem cheias.
+     *         mesmo objeto que o parâmetro location, ou null se todas as
+     *         localizações ao redor estiverem cheias.
      */
     public Location freeAdjacentLocation(Location location) {
         Iterator adjacent = adjacentLocations(location);

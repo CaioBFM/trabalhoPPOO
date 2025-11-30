@@ -15,7 +15,9 @@ public abstract class Animal implements Actor {
     private Location location;
     /** A idade do animal */
     private int age;
-    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
+    /**
+     * Um gerador de números aleatórios compartilhado para controlar a reprodução.
+     */
     private static final Random rand = new Random();
 
     /**
@@ -29,30 +31,35 @@ public abstract class Animal implements Actor {
     /**
      * Faz este animal agir - isto é: faz com que ele faça
      * o que quer que queira ou precise fazer.
-     * (Definido em Actor, implementado em subclasses concretas como Fox/Rabbit, etc)
+     * (Definido em Actor, implementado em subclasses concretas como Fox/Rabbit,
+     * etc)
      */
     abstract public void act(Field currentField, Field updatedField, List<Actor> newAnimals);
 
     /**
      * Retorna a idade máxima permitida para esta espécie.
+     * 
      * @return A idade máxima.
      */
     abstract public int getMaxAge();
 
     /**
      * Retorna a probabilidade de reprodução deste animal.
+     * 
      * @return A probabilidade de reprodução (entre 0 e 1).
      */
     abstract public double getBreedingProbability();
 
     /**
      * Retorna o número máximo de filhotes que podem nascer de uma vez.
+     * 
      * @return O tamanho máximo da ninhada.
      */
     abstract public int getMaxLitterSize();
 
     /**
      * Verifica se o animal atingiu a idade reprodutiva.
+     * 
      * @return True se o animal tiver idade suficiente para procriar.
      */
     abstract public boolean canBreed();

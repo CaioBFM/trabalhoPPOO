@@ -9,6 +9,7 @@ import java.util.HashMap;
  * representando seu conteúdo. Ela usa uma cor de fundo padrão.
  * Cores para cada tipo de espécie podem ser definidas usando o
  * método setColor.
+ * 
  * @author GRUPO 05
  * @version 2025
  */
@@ -29,11 +30,14 @@ public class SimulatorView extends JFrame {
 
     /** Um mapa para armazenar cores para participantes na simulação */
     private HashMap colors;
-    /** Um objeto de estatística calculando e armazenando informações da simulação */
+    /**
+     * Um objeto de estatística calculando e armazenando informações da simulação
+     */
     private FieldStats stats;
 
     /**
      * Cria uma visualização com a largura e altura fornecidas.
+     * 
      * @param height A altura da simulação (linhas).
      * @param width  A largura da simulação (colunas).
      */
@@ -87,7 +91,9 @@ public class SimulatorView extends JFrame {
 
     /**
      * Adiciona um listener para o botão de passo.
-     * Permite que a classe Simulator controle o que acontece quando o botão é clicado.
+     * Permite que a classe Simulator controle o que acontece quando o botão é
+     * clicado.
+     * 
      * @param listener O ouvinte de ação a ser anexado.
      */
     public void setStepListener(ActionListener listener) {
@@ -96,6 +102,7 @@ public class SimulatorView extends JFrame {
 
     /**
      * Define uma cor a ser usada para uma dada classe de objeto.
+     * 
      * @param actorClass A classe do ator.
      * @param color      A cor a ser usada.
      */
@@ -105,6 +112,7 @@ public class SimulatorView extends JFrame {
 
     /**
      * Retorna a cor a ser usada para uma dada classe de objeto.
+     * 
      * @param actorClass A classe do objeto.
      * @return A cor definida ou a cor desconhecida padrão.
      */
@@ -120,6 +128,7 @@ public class SimulatorView extends JFrame {
 
     /**
      * Mostra o estado atual do campo.
+     * 
      * @param step          Qual é o passo da iteração.
      * @param field         O campo a ser representado.
      * @param currentSeason A estação atual da simulação.
@@ -182,6 +191,7 @@ public class SimulatorView extends JFrame {
 
     /**
      * Determina se a simulação deve continuar rodando.
+     * 
      * @param field O campo atual.
      * @return true Se houver mais de uma espécie viva.
      */

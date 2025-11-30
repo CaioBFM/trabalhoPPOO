@@ -25,8 +25,10 @@ public class Tree implements Actor {
     private int fruitCount;
     /** Localização da árvore (necessário pois ela não herda de Animal). */
     private Location location;
-    /** Árvores estão sempre vivas na simulação atual (a menos que sejam destruídas,
-     * o que não foi especificado).  */
+    /**
+     * Árvores estão sempre vivas na simulação atual (a menos que sejam destruídas,
+     * o que não foi especificado).
+     */
     private boolean alive;
 
     /**

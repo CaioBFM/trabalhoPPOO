@@ -20,10 +20,14 @@ public class Fox extends Animal implements HuntersPreys {
     private static final double BREEDING_PROBABILITY = 0.09;
     /** O número máximo de nascimentos (tamanho da ninhada). */
     private static final int MAX_LITTER_SIZE = 3;
-    /** O valor nutricional de um único coelho. Com efeito, este é o
-     * número de passos que uma raposa pode dar antes de ter que comer novamente. */
+    /**
+     * O valor nutricional de um único coelho. Com efeito, este é o
+     * número de passos que uma raposa pode dar antes de ter que comer novamente.
+     */
     private static final int RABBIT_FOOD_VALUE = 4;
-    /** Um gerador de números aleatórios compartilhado para controlar a reprodução. */
+    /**
+     * Um gerador de números aleatórios compartilhado para controlar a reprodução.
+     */
     private static final Random rand = new Random();
 
     // Características individuais (campos de instância).
@@ -55,7 +59,7 @@ public class Fox extends Animal implements HuntersPreys {
      * 
      * @param currentField O campo atualmente ocupado.
      * @param updatedField O campo para o qual transferir (campo atualizado).
-     * @param newFoxes    Uma lista para receber atores recém-criados.
+     * @param newFoxes     Uma lista para receber atores recém-criados.
      */
     public void act(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
@@ -79,7 +83,8 @@ public class Fox extends Animal implements HuntersPreys {
                 setLocation(newLocation);
                 updatedField.place(this, newLocation);
             } else {
-                // não pode nem se mover nem ficar - superpopulação - todas as localizações ocupadas
+                // não pode nem se mover nem ficar - superpopulação - todas as localizações
+                // ocupadas
                 setDead();
             }
         }

@@ -14,6 +14,7 @@ import java.io.IOException;
 /**
  * Um simulador simples de predador-presa, baseado em um campo contendo
  * coelhos e raposas.
+ * 
  * @author GRUPO 05
  * @version 2025
  */
@@ -30,10 +31,10 @@ public class Simulator {
     /** A probabilidade de um coelho ser criado em qualquer posição do campo. */
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
     /** A probabilidade de um caçador ser criado (Baixa densidade). */
-    private static final double HUNTER_CREATION_PROBABILITY = 0.05; 
+    private static final double HUNTER_CREATION_PROBABILITY = 0.05;
     /** A probabilidade de uma árvore ser criada. */
     private static final double TREE_CREATION_PROBABILITY = 0.05;
-    
+
     /** A lista de atores no campo (renomeado de animais para ser genérico) */
     private List<Actor> actors;
     /** A lista de atores que acabaram de nascer */
@@ -66,6 +67,7 @@ public class Simulator {
 
     /**
      * Cria um campo de simulação com o tamanho fornecido.
+     * 
      * @param depth A profundidade (altura) do campo.
      * @param width A largura do campo.
      */
@@ -117,8 +119,9 @@ public class Simulator {
 
     /**
      * Lê um arquivo de mapa e coloca pedras onde houver um 'X'.
+     * 
      * @param filename O caminho do arquivo de texto.
-     * @param field O campo onde as pedras serão colocadas.
+     * @param field    O campo onde as pedras serão colocadas.
      */
     private void loadStonesFromFile(String filename, Field field) {
         obstacles.clear(); // Limpa pedras antigas
@@ -155,7 +158,8 @@ public class Simulator {
     }
 
     /**
-     * Executa a simulação a partir do seu estado atual por um período razoavelmente longo.
+     * Executa a simulação a partir do seu estado atual por um período razoavelmente
+     * longo.
      * (Define 500 passos como padrão).
      */
     public void runLongSimulation() {
@@ -163,8 +167,10 @@ public class Simulator {
     }
 
     /**
-     * Executa a simulação a partir do seu estado atual pelo número fornecido de passos.
+     * Executa a simulação a partir do seu estado atual pelo número fornecido de
+     * passos.
      * Para antes se a simulação deixar de ser viável (ex: extinção).
+     * 
      * @param numSteps O número de passos a executar.
      */
     public void simulate(int numSteps) {
@@ -208,7 +214,8 @@ public class Simulator {
         // Adiciona atores recém-nascidos à lista principal
         actors.addAll(newActors);
 
-        // Obstáculos (como pedras) não agem, mas precisam ser copiados para o novo campo
+        // Obstáculos (como pedras) não agem, mas precisam ser copiados para o novo
+        // campo
         for (Obstacles obstacle : obstacles) {
             if (obstacle instanceof Stone) {
                 Stone stone = (Stone) obstacle;
@@ -241,7 +248,7 @@ public class Simulator {
         updatedField.clear();
 
         // Adicionando as pedras com base nos arquivos de mapa dentro da pasta mapas
-        loadStonesFromFile("src/mapas/map.txt", field);
+        loadStonesFromFile("src/mapas/map3.txt", field);
 
         populate(field);
 
@@ -254,6 +261,7 @@ public class Simulator {
 
     /**
      * Coloca pedras aleatoriamente no campo (Fallback caso o mapa falhe).
+     * 
      * @param field O campo onde colocar as pedras.
      */
     private void putStonesInField(Field field) {
@@ -277,8 +285,9 @@ public class Simulator {
     /**
      * Coloca uma pedra e propaga seu efeito para localizações vizinhas
      * (cria aglomerados de pedras).
-     * @param row A linha central.
-     * @param col A coluna central.
+     * 
+     * @param row   A linha central.
+     * @param col   A coluna central.
      * @param field O campo atual.
      */
     private void placeAndPropagateStone(int row, int col, Field field) {
@@ -297,6 +306,7 @@ public class Simulator {
 
     /**
      * Popula o campo com raposas, coelhos, caçadores e árvores.
+     * 
      * @param field O campo a ser populado.
      */
     private void populate(Field field) {
